@@ -1,8 +1,6 @@
 <?php
 
-$router->define([
-    '' => 'controllers/indexController.php',
-    'about' => 'controllers/aboutController.php',
-    'about/culture' => 'controllers/about-cultureController',
-    'contact' => 'controllers/contactController.php'
-]);
+$router->get('', 'controllers/indexController.php');
+$router->get('about', 'controllers/aboutController.php');
+$router->get('contact', 'controllers/contactController.php');
+$router->post('add-name', 'controllers/addNameController.php');
