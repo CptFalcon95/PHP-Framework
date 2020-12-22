@@ -19,10 +19,13 @@ class QueryBuilder
         );
         try {
             $statement = $this->pdo->prepare($sql);
-            $statement->execute($parameters);
-        } catch (Exception $e) {
+            if($statement->execute($parameters)) {
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
             // TODO redirect to somewhere
-            die('Something went wrong');
+            die($e->getMessage());
         }
 
     }
@@ -31,8 +34,7 @@ class QueryBuilder
     {
         $statement = $this->pdo->prepare("select * from {$table}");
         $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_CLASS);
+        return $statement->fetchAll(PDO::FETCH_OBJ);
         // return $statement->fetchAll();
-
     }
 }

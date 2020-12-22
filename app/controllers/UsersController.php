@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Core\App;
+use App\Core\Response;
+
+use App\User;
 
 class UsersController 
 {
@@ -14,9 +17,19 @@ class UsersController
 
     public function store()
     {
-        App::get('database')->insert('names', [
-            'name' => $_POST['name'],
-        ]);
-        return redirect('users');
+        $user = new User(
+            $_POST['name'], 
+            $_POST['email'], 
+            $_POST['password']
+        );
+        if($user->save()) {
+            Response::json([
+                "success" => "true", 
+                "user" => [
+                    "email" => $user->email, 
+                    "name" => $user->name
+                ]
+            ]);
+        }
     }
 }
