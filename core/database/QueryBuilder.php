@@ -37,4 +37,24 @@ class QueryBuilder
         return $statement->fetchAll(PDO::FETCH_OBJ);
         // return $statement->fetchAll();
     }
+
+    public function selectOne($table, $select = [], $key, $value) {
+        $sql = sprintf(
+            'select %s from %s where %s = %s',
+            implode(',', $select),
+            $table,
+            $key,
+            "'".$value."'"
+        );
+        try {
+            $statement = $this->pdo->prepare($sql);
+            if($statement->execute()) {
+                return $statement->fetch(PDO::FETCH_OBJ);
+            }
+            return false;
+        } catch (PDOException $e) {
+            // TODO redirect to somewhere
+            die($e->getMessage());
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\App;
 use App\Core\Response;
+use App\Core\UserValidator;
 
 use App\User;
 
@@ -22,6 +23,12 @@ class UsersController
             $_POST['email'], 
             $_POST['password']
         );
+        if($user->exists()) {
+            Response::json([
+                "success" => "false", 
+                "message" => "Email already in use"
+            ]);
+        }
         if($user->save()) {
             Response::json([
                 "success" => "true", 

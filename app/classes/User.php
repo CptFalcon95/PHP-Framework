@@ -24,13 +24,18 @@ class User
             'email' => $this->email,
             'password' => Hash::password($this->password)
         ];
+
         if(! App::get('database')->insert('users', $data)){
             throw new Exception('User could not be saved.');
         }
         return true;
     }
 
-    private function checkEmail()  {
-
+    public function exists()  {
+        $findUser = App::get('database')->selectOne('users', ['name'], 'email', $this->email);
+        if(!$findUser) {
+            return false;
+        }
+        return true;
     }
 }
