@@ -4,18 +4,20 @@ namespace App;
 
 use App\Core\App;
 use App\Core\Hash;
+use App\Core\Validator\UserValidator;
 
-class User
+class User extends UserValidator
 {
     public $name;
     public $email;
-    protected $errors = [];
     protected $password;
+    protected $passwordRepeat;
 
-    public function __construct($name, $email, $password) {
+    public function __construct($name, $email, $password, $passwordRepeat){
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
+        $this->passwordRepeat = $passwordRepeat;
     }
 
     public function save() {
@@ -27,14 +29,6 @@ class User
 
         if(! App::get('database')->insert('users', $data)){
             throw new Exception('User could not be saved.');
-        }
-        return true;
-    }
-
-    public function exists()  {
-        $findUser = App::get('database')->selectOne('users', ['name'], 'email', $this->email);
-        if(!$findUser) {
-            return false;
         }
         return true;
     }

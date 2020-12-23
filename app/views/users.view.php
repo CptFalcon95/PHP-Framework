@@ -8,3 +8,10 @@
 </ul>
 
 <?php require('partials/footer.php'); ?>
+
+
+<form action="users" method="post">
+    <input type="text" name="name" placeholder="Name">
+    <input type="email" name="email" placeholder="Email">
+    <input type="text" name="name" placeholder="Name">
+</form>

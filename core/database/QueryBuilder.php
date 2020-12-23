@@ -35,7 +35,6 @@ class QueryBuilder
         $statement = $this->pdo->prepare("select * from {$table}");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_OBJ);
-        // return $statement->fetchAll();
     }
 
     public function selectOne($table, $select = [], $key, $value) {
@@ -44,7 +43,7 @@ class QueryBuilder
             implode(',', $select),
             $table,
             $key,
-            "'".$value."'"
+            "'{$value}'"
         );
         try {
             $statement = $this->pdo->prepare($sql);

@@ -10,7 +10,7 @@ class PagesController
     }
 
     public function about()
-    {
+    {            // TODO redirect to somewhere
         return view('about');
     }
 
