@@ -25,16 +25,16 @@ class UsersController
         );
         if(!$user->validate()) {
             Response::json([
-                "success" => "false", 
-                "messages" => $user->getErrors()
+                'success' => 'false', 
+                'errors' => $user->getErrors()
             ]);
         }
         if($user->save()) {
             Response::json([
-                "success" => "true", 
-                "user" => [
-                    "email" => $user->email, 
-                    "name" => $user->name
+                'success' => 'true', 
+                'user' => [
+                    'email' => $user->email, 
+                    'name' => $user->name
                 ]
             ]);
         }

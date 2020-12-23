@@ -7,21 +7,24 @@ use App\User;
 
 class UserValidator extends Validator
 {
-    private $errors = [];
+    private $errors = [
+        'email' => [],
+        'password' => []
+    ];
 
     public function validate() {
+        $errorMsgs = App::get('config')['errors'];
         if($this->exists() == true) {
-            array_push($this->errors, "Email already in use.");
+            $this->errors['email']['exists'] = $errorMsgs['email']['exists'];
         }
-        if($this->matchPasswords() != true)
-        {
-            array_push($this->errors, "Passwords do not match.");
+        if($this->matchPasswords() != true) {
+            $this->errors['password']['no_match'] = $errorMsgs['password']['no_match'];
         }
-        if($this->regex("password") == false) {
-            array_push($this->errors, "Password unsafe.");
+        if($this->regex('password') == false) {
+            $this->errors['password']['unsafe'] = $errorMsgs['password']['unsafe'];
         }
-        if($this->regex("email") == false) {
-            array_push($this->errors, "Invalid email.");
+        if($this->regex('email') == false) {
+            $this->errors['email']['invalid'] = $errorMsgs['email']['invalid'];
         }
         if(count($this->errors) == 0) {
             return true;
