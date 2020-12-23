@@ -2,8 +2,7 @@
 
 namespace App;
 
-use App\Core\App;
-use App\Core\Hash;
+use App\Core\{App, Hash};
 use App\Core\Validator\UserValidator;
 
 class User extends UserValidator

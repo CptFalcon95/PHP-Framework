@@ -26,7 +26,7 @@ class UserValidator extends Validator
         if($this->regex('email') == false) {
             $this->errors['email']['invalid'] = $errorMsgs['email']['invalid'];
         }
-        if(count($this->errors) == 0) {
+        if(empty($this->errors['email']) && empty($this->errors['password'])) {
             return true;
         }
         return false;   
