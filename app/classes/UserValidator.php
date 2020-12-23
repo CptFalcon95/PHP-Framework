@@ -33,7 +33,7 @@ class UserValidator extends Validator
     }
 
     public function getErrors() {
-        return $this->errors;
+        return array_filter($this->errors);
     }
 
     private function matchPasswords() {
