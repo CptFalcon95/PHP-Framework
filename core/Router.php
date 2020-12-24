@@ -36,6 +36,16 @@ class Router
     }
 
     public function post($uri, $controller) {
+        $argsNum = func_num_args();
+        $args = func_get_args();
+        $uri = $args[0];
+        if($argsNum === 3) {
+            $controller = $args[2];
+            $this->routes['POST'][$uri] = $controller;
+            $this->middleware['POST'][$uri] = $args[1];
+        } else {
+            $controller = $args[1];
+        }
         $this->routes['POST'][$uri] = $controller;
     }
 
@@ -45,8 +55,7 @@ class Router
         {
             if(array_key_exists($uri, $this->middleware[$requestType])) {
                 foreach($this->middleware[$requestType][$uri] as $middleware) {
-                    var_dump(...explode('@', $middleware));
-                    // $this->callMiddleware(...explode('@', $middleware));
+                    $this->callMiddleware(...explode('@', $middleware));
                 }
             }
             return $this->callAction(
@@ -57,8 +66,15 @@ class Router
         throw new Exception('No route defined for this URI.');
     }
 
-    protected function callMiddleware() {
+    protected function callMiddleware($middleware, $action) {
+        $middleware = "App\\Middleware\\{$middleware}";
+        $middleware = new $middleware;
 
+        if(! method_exists($middleware, $action)) {
+            throw new Exception("{$middleware} does not respond to the {$action}.");
+        }
+
+        $middleware->$action();
     }
 
     protected function callAction($controller, $action) {

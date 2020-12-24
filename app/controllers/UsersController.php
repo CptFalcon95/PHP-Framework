@@ -13,7 +13,6 @@ class UsersController
     }
 
     public function authenticate() {
-        // if(Auth::user(User::getPassword($_POST['email']))) {
         if(Auth::user($_POST['email'], $_POST['password'])) {
             Response::json([
                 'success' => true,
