@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Core\{App, Hash};
+use App\Core\{App, Hash, Auth};
 use App\User\Validator\UserValidator;
 
 class User extends UserValidator
@@ -10,13 +10,11 @@ class User extends UserValidator
     public $name;
     public $email;
     protected $password;
-    protected $passwordRepeat;
 
-    public function __construct($name, $email, $password, $passwordRepeat){
+    public function __construct($name, $email, $password){
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
-        $this->passwordRepeat = $passwordRepeat;
     }
 
     public function save() {
@@ -32,7 +30,16 @@ class User extends UserValidator
         return true;
     }
 
-    public static function get($email) {
-        return App::get('database')->selectOne('users', ['password', 'id', 'email'], 'email', $email);
+    public function token() {
+        $user = static::getByMail($this->email);
+        return Auth::createToken($user);
+    }
+
+    public static function get($id) {
+        return App::get('database')->selectOneClass('App\Models\UserModel','users', ['id', 'name', 'email', 'password'], 'id', $id);
+    }
+
+    public static function getByMail($email) {
+        return App::get('database')->selectOne('users', ['id', 'password', 'email'], 'email', $email);
     }
 }

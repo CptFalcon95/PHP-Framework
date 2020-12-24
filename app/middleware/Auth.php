@@ -2,15 +2,26 @@
 
 namespace App\Middleware;
 
-use App\Core\Response;
+use App\Core\{App, Response};
+use ReallySimpleJWT\Token;
 
 class Auth
 {
-    public function loggedIn() {
-        if(true) {
-            Response::json([
-                'error' => 'Not logged in'
-            ]);
+    public function checkToken() {
+        if(isset($_POST['token'])) {
+            $secret = App::get('config')['JWT']['secret'];
+            
+            if(!Token::validate($_POST['token'], $secret)) {
+                Response::json([
+                    'success' => false,
+                    'errors' => 'Token denied.'
+                ]);
+            }
+            return;
         }
+        Response::json([
+            'success' => false,
+            'errors' => 'No token.'
+        ]);
     }
 }

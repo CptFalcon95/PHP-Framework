@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use Exception;
+
 class Router 
 {
 
@@ -35,7 +37,7 @@ class Router
         $this->routes['GET'][$uri] = $controller;
     }
 
-    public function post($uri, $controller) {
+    public function post() {
         $argsNum = func_num_args();
         $args = func_get_args();
         $uri = $args[0];

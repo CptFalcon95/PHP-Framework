@@ -37,7 +37,10 @@ class UserValidator extends Validator
     }
 
     private function matchPasswords() {
-        return $this->password === $this->passwordRepeat;
+        if(isset($_POST['password_repeat'])) {
+            return $this->password === $_POST['password_repeat'];
+        }
+        return false;
     }
 
     private function exists()  {

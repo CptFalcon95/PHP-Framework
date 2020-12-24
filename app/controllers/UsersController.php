@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\{App, Response, Auth};
+use ReallySimpleJWT\Token;
 use App\User;
 
 class UsersController 
@@ -31,7 +32,6 @@ class UsersController
             $_POST['name'], 
             $_POST['email'], 
             $_POST['password'],
-            $_POST['password_repeat']
         );
         if(!$user->validate()) {
             Response::json([
@@ -44,9 +44,17 @@ class UsersController
                 'success' => true, 
                 'user' => [
                     'email' => $user->email, 
-                    'name' => $user->name
+                    'name' => $user->name,
+                    'token' => $user->token()
                 ]
             ]);
         }
+    }
+    
+    public function getPosts() {
+        Response::json([
+            'success' => true, 
+            'data' => User::get(Auth::getId())->posts()
+        ]);
     }
 }
