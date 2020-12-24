@@ -24,7 +24,7 @@ class QueryBuilder
             }
             return false;
         } catch (PDOException $e) {
-            // TODO redirect to somewhere
+            // FIXME Do something better
             die($e->getMessage());
         }
 
@@ -52,7 +52,7 @@ class QueryBuilder
             }
             return false;
         } catch (PDOException $e) {
-            // TODO redirect to somewhere
+            // FIXME Do something better
             die($e->getMessage());
         }
     }

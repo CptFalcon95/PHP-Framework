@@ -12,12 +12,12 @@ class Auth
 
     public static function user($email, $password) {
         $user = User::get($email);
-        $config = App::get('config')["JWT"];
+        $config = App::get('config')['JWT'];
         
         $userId = $user->id;
-        $secret = $config["secret"];
-        $expiration = $config["expiration"];
-        $issuer = $config["issuer"];
+        $secret = $config['secret'];
+        $expiration = $config['expiration'];
+        $issuer = $config['issuer'];
 
         if(password_verify($password, $user->password)) {
             static::$JWTtoken = Token::create($user->id, $secret, $expiration, $issuer);
