@@ -10,14 +10,28 @@ class Router
         'POST' => []
     ];
 
-    public static function load($file)
-    {
+    public $middleware = [
+        'GET' => [],
+        'POST' => []
+    ];
+
+    public static function load($file) {
         $router = new static;
         require $file;
         return $router;
     }
     
-    public function get($uri, $controller) {
+    public function get() {
+        $argsNum = func_num_args();
+        $args = func_get_args();
+        $uri = $args[0];
+        if($argsNum === 3) {
+            $controller = $args[2];
+            $this->routes['GET'][$uri] = $controller;
+            $this->middleware['GET'][$uri] = $args[1];
+        } else {
+            $controller = $args[1];
+        }
         $this->routes['GET'][$uri] = $controller;
     }
 
@@ -25,10 +39,16 @@ class Router
         $this->routes['POST'][$uri] = $controller;
     }
 
-    public function direct($uri, $requestType)
-    {
+    public function direct($uri, $requestType) {
+        
         if(array_key_exists($uri, $this->routes[$requestType]))
         {
+            if(array_key_exists($uri, $this->middleware[$requestType])) {
+                foreach($this->middleware[$requestType][$uri] as $middleware) {
+                    var_dump(...explode('@', $middleware));
+                    // $this->callMiddleware(...explode('@', $middleware));
+                }
+            }
             return $this->callAction(
                 ...explode('@', $this->routes[$requestType][$uri])
             );
@@ -37,8 +57,11 @@ class Router
         throw new Exception('No route defined for this URI.');
     }
 
-    protected function callAction($controller, $action)
-    {
+    protected function callMiddleware() {
+
+    }
+
+    protected function callAction($controller, $action) {
         $controller = "App\\Controllers\\{$controller}";
         $controller = new $controller;
 
