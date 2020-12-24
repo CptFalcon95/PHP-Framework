@@ -3,5 +3,13 @@
         "classmap": [
             "./"
         ]
+    },
+    "require": {
+        "rbdwllr/reallysimplejwt": "^3.1"
+    },
+    "scripts": {
+        "al": "composer dumpautoload",
+        "devStart": "php -S localhost:3000 -t public/",
+        "dS": "php -S localhost:3000 -t public/"
     }
 }

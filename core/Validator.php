@@ -1,5 +1,5 @@
 <?php 
-namespace App\Core\Validator;
+namespace App\Core;
 
 use App\Core\App;
 
@@ -14,7 +14,7 @@ class Validator
                 return static::checkRegex('password', $this->password);
                 break;
             default:
-                return false;
+                throw new \Exception("{$type} is not a case within the switch.");
                 break;
         }
     }

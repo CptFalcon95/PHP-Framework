@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Validator;
+namespace App\User\Validator;
 
-use App\Core\App;
+use App\Core\{App, Validator};
 use App\User;
 
 class UserValidator extends Validator

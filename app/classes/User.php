@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Core\{App, Hash};
-use App\Core\Validator\UserValidator;
+use App\User\Validator\UserValidator;
 
 class User extends UserValidator
 {

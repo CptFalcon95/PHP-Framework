@@ -2,21 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Core\App;
-use App\Core\Response;
+use App\Core\{App, Response};
 
 use App\User;
 
 class UsersController 
 {
-    public function index()
-    {
-        $users = App::get('database')->selectAll('names');
+    public function index() {
+        $users = App::get('database')->selectAll('users');
         return view('users', ['users' => $users]);
     }
 
-    public function store()
-    {
+    public function login() {
+        if(Authenticate::user(User::get($_POST['email']))) {
+            
+        }
+    }
+
+    public function store() {
         $user = new User(
             $_POST['name'], 
             $_POST['email'], 
