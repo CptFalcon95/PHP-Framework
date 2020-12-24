@@ -2,8 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Core\{App, Response};
-
+use App\Core\{App, Response, Auth};
 use App\User;
 
 class UsersController 
@@ -13,9 +12,18 @@ class UsersController
         return view('users', ['users' => $users]);
     }
 
-    public function login() {
-        if(Authenticate::user(User::get($_POST['email']))) {
-            
+    public function authenticate() {
+        // if(Auth::user(User::getPassword($_POST['email']))) {
+        if(Auth::user($_POST['email'], $_POST['password'])) {
+            Response::json([
+                'success' => true,
+                'token' => Auth::$JWTtoken
+            ]);
+        } else {
+            Response::json([
+                'success' => false,
+                'msg' => App::get('config')['errors']['login']['failed']
+            ]);
         }
     }
 
@@ -28,13 +36,13 @@ class UsersController
         );
         if(!$user->validate()) {
             Response::json([
-                'success' => 'false', 
+                'success' => false, 
                 'errors' => $user->getErrors()
             ]);
         }
         if($user->save()) {
             Response::json([
-                'success' => 'true', 
+                'success' => true, 
                 'user' => [
                     'email' => $user->email, 
                     'name' => $user->name

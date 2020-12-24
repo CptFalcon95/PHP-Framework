@@ -31,4 +31,8 @@ class User extends UserValidator
         }
         return true;
     }
+
+    public static function get($email) {
+        return App::get('database')->selectOne('users', ['password', 'id', 'email'], 'email', $email);
+    }
 }
