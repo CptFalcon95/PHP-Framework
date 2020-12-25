@@ -18,7 +18,7 @@ class Token
         }
     }
 
-    public static function check($token = '') {
+    public static function verify($token = '') {
         if (func_num_args()) {
             $token = func_get_arg(1);
         } else {
