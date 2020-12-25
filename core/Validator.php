@@ -1,6 +1,7 @@
 <?php 
 namespace App\Core;
 
+use Exception;
 use App\Core\App;
 
 class Validator
@@ -14,7 +15,7 @@ class Validator
                 return static::checkRegex('password', $this->password);
                 break;
             default:
-                throw new \Exception("{$type} is not a case within the switch.");
+                throw new Exception("{$type} is not a case within the switch.");
                 break;
         }
     }
@@ -28,7 +29,7 @@ class Validator
                 return preg_match(App::get('config')['regex']['password'], $string);
                 break;
             default:
-                throw new \Exception("{$type} is not a case within the switch.");
+                throw new Exception("{$type} is not a case within the switch.");
                 break;
         }
     }

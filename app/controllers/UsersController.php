@@ -2,8 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Core\{App, Response, Auth};
-use ReallySimpleJWT\Token;
+use App\Core\{App, Response, Auth, Token};
 use App\User;
 
 class UsersController 
@@ -17,7 +16,7 @@ class UsersController
         if(Auth::user($_POST['email'], $_POST['password'])) {
             Response::json([
                 'success' => true,
-                'token' => Auth::$JWTtoken
+                'token' => Token::$JWTtoken
             ]);
         } else {
             Response::json([

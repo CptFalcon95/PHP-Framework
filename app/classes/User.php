@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Core\{App, Hash, Auth};
+use App\Core\{App, Hash, Auth, Token};
 use App\User\Validator\UserValidator;
 
 class User extends UserValidator
@@ -32,7 +32,7 @@ class User extends UserValidator
 
     public function token() {
         $user = static::getByMail($this->email);
-        return Auth::createToken($user);
+        return Token::createToken($user->id);
     }
 
     public static function get($id) {
