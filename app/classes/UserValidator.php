@@ -13,18 +13,18 @@ class UserValidator extends Validator
     ];
 
     public function validate() {
-        $errorMsgs = App::get('config')['errors'];
+        $errMsgs = App::get('err_msgs');
         if($this->exists() == true) {
-            $this->errors['email']['exists'] = $errorMsgs['email']['exists'];
+            $this->errors['email']['exists'] = $errMsgs->email->exists;
         }
         if($this->matchPasswords() != true) {
-            $this->errors['password']['no_match'] = $errorMsgs['password']['no_match'];
+            $this->errors['password']['no_match'] = $errMsgs->password->no_match;
         }
         if($this->regex('password') == false) {
-            $this->errors['password']['unsafe'] = $errorMsgs['password']['unsafe'];
+            $this->errors['password']['unsafe'] = $errMsgs->password->unsafe;
         }
         if($this->regex('email') == false) {
-            $this->errors['email']['invalid'] = $errorMsgs['email']['invalid'];
+            $this->errors['email']['invalid'] = $errMsgs->email->invalid;
         }
         if(empty($this->errors['email']) && empty($this->errors['password'])) {
             return true;

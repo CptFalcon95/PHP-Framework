@@ -5,7 +5,8 @@
         ]
     },
     "require": {
-        "rbdwllr/reallysimplejwt": "^3.1"
+        "rbdwllr/reallysimplejwt": "^3.1",
+        "vlucas/phpdotenv": "^5.2"
     },
     "scripts": {
         "al": "composer dumpautoload",

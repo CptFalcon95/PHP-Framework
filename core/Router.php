@@ -27,7 +27,9 @@ class Router
         $argsNum = func_num_args();
         $args = func_get_args();
         $uri = $args[0];
-        if($argsNum === 3) {
+        if($argsNum != 3 && $argsNum != 2) {
+            throw new Exception("Parameters invalid for GET route");
+        } elseif ($argsNum === 3) {
             $controller = $args[2];
             $this->routes['GET'][$uri] = $controller;
             $this->middleware['GET'][$uri] = $args[1];
@@ -41,7 +43,9 @@ class Router
         $argsNum = func_num_args();
         $args = func_get_args();
         $uri = $args[0];
-        if($argsNum === 3) {
+        if($argsNum != 3 && $argsNum != 2) {
+            throw new Exception("Parameters invalid for POST route");
+        } elseif ($argsNum === 3) {
             $controller = $args[2];
             $this->routes['POST'][$uri] = $controller;
             $this->middleware['POST'][$uri] = $args[1];

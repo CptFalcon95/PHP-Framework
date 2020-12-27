@@ -23,10 +23,10 @@ class Validator
     public static function checkRegex($type, $string) {
         switch ($type) {
             case 'email':
-                return preg_match(App::get('config')['regex']['email'], $string);
+                return preg_match(App::get('config')->regex->email, $string);
                 break;
             case 'password':
-                return preg_match(App::get('config')['regex']['password'], $string);
+                return preg_match(App::get('config')->regex->password, $string);
                 break;
             default:
                 throw new Exception("{$type} is not a case within the switch.");

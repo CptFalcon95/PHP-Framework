@@ -22,6 +22,6 @@ class Auth
         if(!$token) {
             return false;
         }
-        return Token::payload($token);
+        return Token::payload($token)['user_id'];
     }
 }

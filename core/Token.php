@@ -25,7 +25,7 @@ class Token
             $token = static::get();
         }
         if(static::get() != false) {
-            $secret = App::get('config')['JWT']['secret'];
+            $secret = $_ENV['JWT_SECRET'];
             if(!JWT::validate($token, $secret)) {
                 return false;
             }
@@ -35,15 +35,16 @@ class Token
     }
 
     public static function createToken($userId) {
-        $config = App::get('config')['JWT'];
-        $secret = $config['secret'];
-        $expiration = $config['expiration'];
-        $issuer = $config['issuer'];
+        $secret = $_ENV['JWT_SECRET'];
+        // TODO Needs its own config
+        // $expiration = $_ENV['JWT_EXPIRATION'];
+        $expiration = time() + 60 * 60 * 24 * 60;
+        $issuer = $_ENV['JWT_ISSUER'];
         static::$JWTtoken = JWT::create($userId, $secret, $expiration, $issuer);
         return static::$JWTtoken;
     }
 
     public static function payload($token) {
-        return JWT::getPayload($token, App::get('config')['JWT']['secret'])["user_id"];
+        return JWT::getPayload($token, $_ENV['JWT_SECRET']);
     }
 }

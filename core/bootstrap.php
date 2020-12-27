@@ -4,14 +4,16 @@ use App\Core\App;
 
 $app = [];
 
-App::bind('config', $config = require '../config.php');
-
-$config = App::get('config');
-
 App::bind('database', new QueryBuilder(
-    Connection::make($config['database'])
+    Connection::make()
 ));
 
+App::get('database')->pdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+/* 
+// Quick way to have some functions ready to use
+*/
 function view($name, $data = [])
 {
     extract($data);
@@ -21,6 +23,15 @@ function view($name, $data = [])
 function redirect($path)
 {
     header("Location: {$path}");
+}
+
+function parseJSONFile($filename)
+{
+    $path = "../app/";
+    if (!file_exists($path.$filename)) {
+        throw new Exception("File not found in App directory. Path is relative to app");
+    }
+    return json_decode(file_get_contents($filename));
 }
 
 function dd()

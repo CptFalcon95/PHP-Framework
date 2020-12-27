@@ -1,0 +1,15 @@
+{
+    "errors": {
+        "email" : {
+            "invalid" : "Email is invalid.",
+            "exists" : "Email already in use."
+        },
+        "password" : {
+            "no_match": "Passwords don't match.",
+            "unsafe": "Minimum length: 8, atleast one capital letter, number and a none word character required"
+        }
+    },
+    "success" : {
+        "registered": "Registration successful."
+    }
+}

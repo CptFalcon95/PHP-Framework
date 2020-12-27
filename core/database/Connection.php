@@ -2,15 +2,14 @@
 
 class Connection
 {
-    public static function make($config)
+    public static function make()
     {
         try 
         {
             return new PDO(
-                $config['connection'].';dbname='.$config['name'],
-                $config['username'],
-                $config['password'],
-                $config['options']
+                $_ENV['DB_CONNECTION'].';dbname='.$_ENV['DB_NAME'],
+                $_ENV['DB_USER'],
+                $_ENV['DB_PASS'],
             );
         } 
         catch (PDOException $e) 
