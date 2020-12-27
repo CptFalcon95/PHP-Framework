@@ -6,7 +6,7 @@
         },
         "password" : {
             "no_match": "Passwords don't match.",
-            "unsafe": "Minimum length: 8, atleast one capital letter, one number and a non word character required"
+            "unsafe": "Minimum length: 8, atleast one capital letter, one number and a non word character required."
         }
     },
     "success" : {
