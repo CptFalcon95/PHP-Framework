@@ -13,9 +13,8 @@ class UsersController
     }
 
     public function authenticate() {
-        $user = new User;
-        if($user->authenticate($_POST['email'], $_POST['password'])) {
-            $user = $user->getByMail($_POST['email']);
+        $user = (new User())->getByMail($_POST['email']);
+        if($user->authenticate($_POST['password'])) {
             Response::json([
                 'success' => true,
                 'token' => $user->createToken()
@@ -56,10 +55,10 @@ class UsersController
     }
     
     public function getPosts() {
-        $user = new User;
+        $user = (new User())->get(Token::getUserId());
         Response::json([
             'success' => true, 
-            'data' => $user->get(Token::getUserId())->posts()
+            'data' => $user->posts()
         ]);
     }
 }

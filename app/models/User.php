@@ -26,9 +26,8 @@ class User extends Model
         return true;
     }
 
-    public function authenticate($email, $password) {
-        $user = $this->getByMail($email);
-        if(password_verify($password, $user->password)) {
+    public function authenticate($password) {
+        if(password_verify($password, $this->password)) {
             return true;
         }
         return false;
