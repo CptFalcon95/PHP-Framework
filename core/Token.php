@@ -6,7 +6,7 @@ use ReallySimpleJWT\Token as JWT;
 
 class Token
 {
-    public static $JWTtoken;
+    protected $JWTtoken;
 
     public static function get() {
         if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
@@ -19,14 +19,9 @@ class Token
     }
 
     public static function verify($token = '') {
-        if (func_num_args()) {
-            $token = func_get_arg(1);
-        } else {
-            $token = static::get();
-        }
+        $token = (func_num_args()) ? func_get_arg(1) : static::get();
         if(static::get() != false) {
-            $secret = $_ENV['JWT_SECRET'];
-            if(!JWT::validate($token, $secret)) {
+            if(!JWT::validate($token, $_ENV['JWT_SECRET'])) {
                 return false;
             }
             return true;
@@ -34,17 +29,24 @@ class Token
         return false;
     }
 
-    public static function createToken($userId) {
+    public static function create($userId) {
         $secret = $_ENV['JWT_SECRET'];
         // TODO Needs its own config
         // $expiration = $_ENV['JWT_EXPIRATION'];
         $expiration = time() + 60 * 60 * 24 * 60;
         $issuer = $_ENV['JWT_ISSUER'];
-        static::$JWTtoken = JWT::create($userId, $secret, $expiration, $issuer);
-        return static::$JWTtoken;
+        return JWT::create($userId, $secret, $expiration, $issuer);
     }
 
     public static function payload($token) {
         return JWT::getPayload($token, $_ENV['JWT_SECRET']);
+    }
+
+    public static function getUserId() {
+        $token = static::get();
+        if(!$token) {
+            return false;
+        }
+        return static::payload($token)['user_id'];
     }
 }

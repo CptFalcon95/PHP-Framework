@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Core\{App, Response, Auth, Token};
-use App\User;
+use App\Core\{App, Response, Token, Hash};
+use App\Models\User;
 
 class UsersController 
 {
@@ -13,47 +13,53 @@ class UsersController
     }
 
     public function authenticate() {
-        if(Auth::user($_POST['email'], $_POST['password'])) {
+        $user = new User;
+        if($user->authenticate($_POST['email'], $_POST['password'])) {
+            $user = $user->getByMail($_POST['email']);
             Response::json([
                 'success' => true,
-                'token' => Token::$JWTtoken
+                'token' => $user->createToken()
             ]);
         } else {
             Response::json([
                 'success' => false,
-                'msg' => App::get('config')['errors']['login']['failed']
+                'msg' => App::get('err_msgs')->login
             ]);
         }
     }
 
     public function store() {
-        $user = new User(
-            $_POST['name'], 
-            $_POST['email'], 
-            $_POST['password'],
-        );
+        $user = new User;
+        $user->name = $_POST['name']; 
+        $user->email = $_POST['email']; 
+        $user->password = $_POST['password'];
+
         if(!$user->validate()) {
             Response::json([
                 'success' => false, 
                 'errors' => $user->getErrors()
             ]);
         }
+
+        $user->password = Hash::password($_POST['password']);
         if($user->save()) {
             Response::json([
                 'success' => true, 
+                'msg' => App::get('succ_msgs')->registered,
                 'user' => [
                     'email' => $user->email, 
                     'name' => $user->name,
-                    'token' => $user->token()
+                    'token' => $user->createToken()
                 ]
             ]);
         }
     }
     
     public function getPosts() {
+        $user = new User;
         Response::json([
             'success' => true, 
-            'data' => User::get(Auth::getId())->posts()
+            'data' => $user->get(Token::getUserId())->posts()
         ]);
     }
 }

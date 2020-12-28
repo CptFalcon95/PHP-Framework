@@ -1,23 +1,54 @@
-<?php
+<?php 
 
-namespace App\User\Validator;
+namespace App\Models;
 
-use App\Core\{App, Validator};
-use App\User;
+use App\Core\{App, Token};
+use App\Core\Model;
+use Exception;
 
-class UserValidator extends Validator
+class User extends Model
 {
-    private $errors = [
-        'email' => [],
-        'password' => []
-    ];
+    public $id, $name, $email, $password;
+
+    protected $table = 'users';
+    protected $model = 'User';
+
+    public function save() {
+        $data = [
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password
+        ];
+
+        if(! App::get('database')->insert($this->table, $data)){
+            throw new Exception('User could not be saved.');
+        }
+        return true;
+    }
+
+    public function authenticate($email, $password) {
+        $user = $this->getByMail($email);
+        if(password_verify($password, $user->password)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function createToken() {
+        $user = $this->getByMail($this->email);
+        return Token::create($user->id);
+    }
+
+    public function posts() {
+        return $this->password;
+    }
 
     public function validate() {
         $errMsgs = App::get('err_msgs');
         if($this->exists() == true) {
             $this->errors['email']['exists'] = $errMsgs->email->exists;
         }
-        if($this->matchPasswords() != true) {
+        if($this->matchPasswords() == false) {
             $this->errors['password']['no_match'] = $errMsgs->password->no_match;
         }
         if($this->regex('password') == false) {
@@ -30,10 +61,6 @@ class UserValidator extends Validator
             return true;
         }
         return false;   
-    }
-
-    public function getErrors() {
-        return array_filter($this->errors);
     }
 
     private function matchPasswords() {
@@ -50,4 +77,6 @@ class UserValidator extends Validator
         }
         return true;
     }
+
+
 }

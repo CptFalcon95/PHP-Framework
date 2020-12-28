@@ -6,6 +6,17 @@ use App\Core\App;
 
 class Validator
 {
+
+    public $errors = [
+        'email' => [],
+        'password' => []
+    ];
+
+    public function getErrors() {
+        
+        return array_filter($this->errors);
+    }
+
     protected function regex($type) {
         switch ($type) {
             case 'email':
