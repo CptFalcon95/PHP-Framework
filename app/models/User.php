@@ -39,7 +39,7 @@ class User extends Model
     }
 
     public function posts() {
-        return $this->password;
+        return $this->id;
     }
 
     public function validate() {

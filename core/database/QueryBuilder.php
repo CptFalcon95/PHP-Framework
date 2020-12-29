@@ -81,4 +81,25 @@ class QueryBuilder
             die($e->getMessage());
         }
     }
+
+    public function selectAllClass($class, $table, $select = [], $key, $value) {
+        $sql = sprintf(
+            'select %s from %s where %s = %s',
+            implode(',', $select),
+            $table,
+            $key,
+            "{$value}"
+        );
+        try {
+            $statement = $this->pdo->prepare($sql);
+            if($statement->execute()) {
+                $statement->setFetchMode(PDO::FETCH_CLASS, $class);
+                return $statement->fetchAll();
+            }
+            return false;
+        } catch (PDOException $e) {
+            // FIXME Do something better
+            die($e->getMessage());
+        }
+    }
 }
