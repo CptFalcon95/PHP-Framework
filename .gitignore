@@ -3,3 +3,4 @@ vendor
 config.php
 .env
 todo.txt
+node_modules/

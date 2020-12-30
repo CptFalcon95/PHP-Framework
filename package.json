@@ -1,0 +1,47 @@
+{
+  "name": "falcon-social-server",
+  "version": "1.0.0",
+  "description": "Readme is underway..",
+  "main": "babel.config.js",
+  "dependencies": {
+    "bootstrap-scss": "^4.5.3",
+    "gulp": "^4.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/register": "^7.12.1",
+    "autoprefixer": "^10.0.1",
+    "del": "^6.0.0",
+    "dotenv": "^8.2.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-cli": "^2.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-if": "^3.0.0",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-series": "^1.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "nodemon": "^2.0.6",
+    "postcss": "^8.1.4",
+    "yargs": "^16.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CptFalcon95/Falcon-social-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CptFalcon95/Falcon-social-server/issues"
+  },
+  "homepage": "https://github.com/CptFalcon95/Falcon-social-server#readme"
+}

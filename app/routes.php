@@ -1,6 +1,7 @@
 <?php
 
-$router->get('', 'PagesController@home');
+$router->get('', 'PagesController@login');
+$router->get('register', 'PagesController@register');
 $router->get('about', 'PagesController@about');
 $router->get('contact', 'PagesController@contact');
 $router->get('users', 'UsersController@index');

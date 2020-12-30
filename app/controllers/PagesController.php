@@ -4,14 +4,20 @@ namespace App\Controllers;
 
 class PagesController 
 {
-    public function home()
+    public function login()
     {
-        return view('index');
+        return view('login', [
+            "pageTitle" => "Login",
+            "page" => "login"
+        ]);
     }
 
-    public function about()
+    public function register()
     {
-        return view('about');
+        return view('register', [
+            "pageTitle" => "Register",
+            "page" => "register"
+        ]);
     }
 
     public function contact()
