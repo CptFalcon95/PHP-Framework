@@ -38,10 +38,6 @@ class User extends Model
         return Token::create($user->id);
     }
 
-    public function posts() {
-        return $this->id;
-    }
-
     public function validate() {
         $errMsgs = App::get('err_msgs');
         if($this->exists() == true) {

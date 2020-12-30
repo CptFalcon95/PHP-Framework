@@ -1,7 +1,6 @@
 <?php 
 
 namespace App\Core;
-use App\Core\App;
 use ReallySimpleJWT\Token as JWT;
 
 class Token
@@ -20,11 +19,11 @@ class Token
 
     public static function verify($token = '') {
         $token = (func_num_args()) ? func_get_arg(1) : static::get();
-        if(static::get() != false) {
-            if(!JWT::validate($token, $_ENV['JWT_SECRET'])) {
-                return false;
+        if($token != false) {
+            if(JWT::validate($token, $_ENV['JWT_SECRET'])) {
+                return true;
             }
-            return true;
+            return false;
         }
         return false;
     }
@@ -44,9 +43,9 @@ class Token
 
     public static function getUserId() {
         $token = static::get();
-        if(!$token) {
-            return false;
+        if($token) {
+            return static::payload($token)['user_id'];;
         }
-        return static::payload($token)['user_id'];
+        return false;
     }
 }

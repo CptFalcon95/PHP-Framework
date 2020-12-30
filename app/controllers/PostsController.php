@@ -2,35 +2,37 @@
 
 namespace App\Controllers;
 
-use App\Core\{Response};
+use App\Core\{Response, Token, App};
 use App\Models\Post;
 
 class PostsController
 {
     public function index() {
-        $posts = array_map(function($post) {
-            // FIXME
-            // $errors array is redundant in this context, its inherited from the validator class.
-            // Within this context validation errors are redudant -
-            // because data is returned instead of POSTed so it's already validated.
-            unset($post->errors);
-            return $post;
-        }, (new Post())->getAll());
         Response::json([
-            "data" => $posts
+            "data" => (new Post())->getUserPosts(
+                Token::getUserId()
+            )
         ]);
     }
 
     public function store() {
-        $post = new Post;
-        $post->content = $_POST['content'];
-        if($post->save()) {
+        if(isset($_POST['content'])) {
+            $post = new Post;
+            $post->content = $_POST['content'];
+            $post->user_id = Token::getUserId();
+            if($post->save()) {
+                Response::json([
+                    "succes" => true
+                ]);
+            }
             Response::json([
-                "succes" => true
+                "succes" => false,
+                "msg" => App::get('err_msgs')->post->failed
             ]);
         }
         Response::json([
-            "succes" => false
+            "succes" => false,
+            "msg" => App::get('err_msgs')->post->failed
         ]);
     }
 }

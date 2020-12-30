@@ -15,18 +15,19 @@ class Post extends Model
 
     public function save() {
         $data = [
-            'user_id' => Token::getUserId(),
+            'user_id' => $this->user_id,
             'content' => $this->content,
         ];
 
-        if(! App::get('database')->insert($this->table, $data)){
+        if(!App::get('database')->insert($this->table, $data)){
             throw new Exception('Post could not be saved.');
         }
         return true;
     }
 
-    public function getAll() {
-        return App::get('database')->selectAllClass("App\\Models\\".$this->model, $this->table, ['*'], 'user_id', Token::getUserId());
+    public function getUserPosts($user_id) {
+        $posts = App::get('database')->selectAllModel($this->model, $this->table, ['*'], 'user_id', $user_id);
+        return $this->trimErrors($posts);
     }
 
 }

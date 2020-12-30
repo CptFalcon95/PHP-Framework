@@ -61,7 +61,7 @@ class QueryBuilder
         }
     }
     
-    public function selectOneClass($class, $table, $select = [], $key, $value) {
+    public function selectOneModel($model, $table, $select = [], $key, $value) {
         $sql = sprintf(
             'select %s from %s where %s = %s',
             implode(',', $select),
@@ -72,7 +72,7 @@ class QueryBuilder
         try {
             $statement = $this->pdo->prepare($sql);
             if($statement->execute()) {
-                $statement->setFetchMode(PDO::FETCH_CLASS, $class);
+                $statement->setFetchMode(PDO::FETCH_CLASS, 'App\\Models\\'.$model);
                 return $statement->fetch();
             }
             return false;
@@ -82,7 +82,7 @@ class QueryBuilder
         }
     }
 
-    public function selectAllClass($class, $table, $select = [], $key, $value) {
+    public function selectAllModel($model, $table, $select = [], $key, $value) {
         $sql = sprintf(
             'select %s from %s where %s = %s',
             implode(',', $select),
@@ -93,7 +93,7 @@ class QueryBuilder
         try {
             $statement = $this->pdo->prepare($sql);
             if($statement->execute()) {
-                $statement->setFetchMode(PDO::FETCH_CLASS, $class);
+                $statement->setFetchMode(PDO::FETCH_CLASS, 'App\\Models\\'.$model);
                 return $statement->fetchAll();
             }
             return false;

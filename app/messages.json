@@ -8,7 +8,10 @@
             "no_match": "Passwords don't match.",
             "unsafe": "Minimum length: 8, atleast one capital letter, one number and a non word character required."
         },
-        "login" : "Login failed, please try again."
+        "login" : "Login failed, please try again.",
+        "post" : {
+            "failed" : "Could not be posted, please try again."
+        }
     },
     "success" : {
         "registered": "Registration successful."
