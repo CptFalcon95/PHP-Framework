@@ -36,7 +36,7 @@ class UsersController
         if(!$user->validate()) {
             Response::json([
                 'success' => false, 
-                'errors' => $user->getErrors()
+                'errors'  => $user->getErrors()
             ]);
         }
 
@@ -47,7 +47,7 @@ class UsersController
                 'msg' => App::get('succ_msgs')->registered,
                 'user' => [
                     'email' => $user->email, 
-                    'name' => $user->name,
+                    'name'  => $user->name,
                     'token' => $user->createToken()
                 ]
             ]);

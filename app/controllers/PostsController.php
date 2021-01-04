@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\{Response, Token, App};
-use App\Models\Post;
+use App\Models\{Post, Comment};
 
 class PostsController
 {
@@ -34,5 +34,12 @@ class PostsController
             "succes" => false,
             "msg" => App::get('err_msgs')->post->failed
         ]);
+    }
+
+    public function comment() {
+        $comment = new Comment;
+        $comment->post_id = $_POST['post_id'];
+        $comment->user_id = Token::getUserId();
+        $comment->content = $_POST['content'];
     }
 }
