@@ -1,5 +1,7 @@
 <?php
 
+use App\Core\Response;
+
 class QueryBuilder
 {
     protected $pdo;
@@ -27,18 +29,24 @@ class QueryBuilder
                 return true;
             }
             return false;
-        } catch (PDOException $e) {
-            // FIXME Do something better
-            die($e->getMessage());
+        } catch(PDOException $e){
+            dd($e->getMessage());
+            return false;
         }
 
     }
 
     public function selectAll($table)
     {
-        $statement = $this->pdo->prepare("select * from {$table}");
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_OBJ);
+        try {
+            $statement = $this->pdo->prepare("select * from {$table}");
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_OBJ);
+        } catch(PDOException $e) {
+            dd($e->getMessage());
+            return false;
+        }
+
     }
 
     public function selectOne($table, $select = [], $key, $value) {
@@ -56,8 +64,8 @@ class QueryBuilder
             }
             return false;
         } catch (PDOException $e) {
-            // FIXME Do something better
-            die($e->getMessage());
+            dd($e->getMessage());
+            return false;
         }
     }
     
@@ -77,8 +85,8 @@ class QueryBuilder
             }
             return false;
         } catch (PDOException $e) {
-            // FIXME Do something better
-            die($e->getMessage());
+            dd($e->getMessage());
+            return false;
         }
     }
 
@@ -98,8 +106,8 @@ class QueryBuilder
             }
             return false;
         } catch (PDOException $e) {
-            // FIXME Do something better
-            die($e->getMessage());
+            dd($e->getMessage());
+            return false;
         }
     }
 }

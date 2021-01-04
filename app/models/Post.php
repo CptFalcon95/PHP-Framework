@@ -21,10 +21,15 @@ class Post extends Model
         ];
 
         if(!App::get('database')->insert($this->table, $data)){
-            throw new Exception('Post could not be saved.');
+            return false;
         }
         return true;
     }
+
+    // public function getByHash($hash) {
+    //     $post = App::get('database')->selectOneModel($this->model, $this->table, ['*'], 'hash', $hash);
+    //     return $this->trimErrors($post);
+    // }
 
     public function getUserPosts($user_id) {
         $posts = App::get('database')->selectAllModel($this->model, $this->table, ['*'], 'user_id', $user_id);

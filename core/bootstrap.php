@@ -36,15 +36,18 @@ function parseJSONFile($filename)
 
 function dd()
 {
-    $args = func_get_args();
-    if (count($args))
-    {
-        echo "<pre>";
-        foreach ($args as $arg)
+    $productionEnv = $_ENV['PROD'];
+    if($productionEnv === "false") {
+        $args = func_get_args();
+        if (count($args))
         {
-            var_dump($arg);
+            echo "<pre>";
+            foreach ($args as $arg)
+            {
+                var_dump($arg);
+            }
+            echo "</pre>";
+            die();
         }
-        echo "</pre>";
-        die();
     }
 }
