@@ -29,7 +29,7 @@ function parseJSONFile($filename)
 {
     $path = "../app/";
     if (!file_exists($path.$filename)) {
-        throw new Exception("File not found in App directory. Path is relative to app");
+        throw new Exception("File not found in App directory. Path is relative to app directory");
     }
     return json_decode(file_get_contents($filename));
 }
