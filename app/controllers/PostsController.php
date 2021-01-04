@@ -8,10 +8,17 @@ use App\Models\{Post, Comment};
 class PostsController
 {
     public function index() {
+        $posts = (new Post())->getUserPosts(Token::getUserId());
+
+        if (!count($posts)) {
+            Response::json([
+                "success" => false,
+                "msgs"    => App::get('err_msgs')->post->no_posts
+            ]);
+        }
         Response::json([
-            "data" => (new Post())->getUserPosts(
-                Token::getUserId()
-            )
+            "success" => true,
+            "data" => $posts
         ]);
     }
 
@@ -25,10 +32,6 @@ class PostsController
                     "succes" => true
                 ]);
             }
-            Response::json([
-                "succes" => false,
-                "msg" => App::get('err_msgs')->post->failed
-            ]);
         }
         Response::json([
             "succes" => false,

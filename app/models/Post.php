@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Core\App;
+use App\Core\{App, Hash};
 use App\Core\Model;
 use Exception;
 
 class Post extends Model
 {
-    public $id, $user_id, $content, $updated_at, $created_at;
+    public $id, $user_id, $hash, $content, $updated_at, $created_at;
 
     protected $table = 'posts';
     protected $model = 'Post';
@@ -17,6 +17,7 @@ class Post extends Model
         $data = [
             'user_id' => $this->user_id,
             'content' => $this->content,
+            'hash'    => Hash::randomString(16)
         ];
 
         if(!App::get('database')->insert($this->table, $data)){

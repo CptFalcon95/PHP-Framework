@@ -10,7 +10,8 @@
         },
         "login" : "Login failed, please try again.",
         "post" : {
-            "failed" : "Could not be posted, please try again."
+            "failed" : "Could not be posted, please try again.",
+            "no_posts" : "Nothing posted yet. Create your first post!"
         }
     },
     "success" : {
