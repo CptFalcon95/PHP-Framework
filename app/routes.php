@@ -11,4 +11,6 @@ $router->post('users/register', 'UsersController@store');
 $router->post('users/auth', 'UsersController@authenticate');
 
 $router->post('posts/store', ['Auth@checkToken'], 'PostsController@store');
+$router->post('comments/store', 'CommentsController@store');
 $router->get('posts/index', ['Auth@checkToken'], 'PostsController@index');
+$router->get('p', ['Auth@checkToken'], 'PostsController@getPost');

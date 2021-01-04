@@ -9,7 +9,6 @@ class PostsController
 {
     public function index() {
         $posts = (new Post())->getUserPosts(Token::getUserId());
-
         if (!count($posts)) {
             Response::json([
                 "success" => false,
@@ -39,10 +38,15 @@ class PostsController
         ]);
     }
 
-    public function comment() {
-        $comment = new Comment;
-        $comment->post_id = $_POST['post_id'];
-        $comment->user_id = Token::getUserId();
-        $comment->content = $_POST['content'];
+    public function getPost() {
+        if(isset($_GET['hash'])) {
+            $post = (new Post())->getPost($_GET['hash']);
+            dd(Token::createCommentToken($post->hash));
+            $post->token = Token::createCommentToken($post->hash);
+            Response::json([
+                "succes" => true,
+                "post"   => $post
+            ]);
+        }
     }
 }

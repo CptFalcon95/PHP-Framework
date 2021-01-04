@@ -12,9 +12,15 @@
         "post" : {
             "failed" : "Could not be posted, please try again.",
             "no_posts" : "Nothing posted yet. Create your first post!"
+        },
+        "comment" : {
+            "failed" : "Comment could not be posted, please try again."
         }
     },
     "success" : {
-        "registered": "Registration successful."
+        "registered": "Registration successful.",
+        "comment" : {
+            "success" : "Comment posted."
+        }
     }
 }

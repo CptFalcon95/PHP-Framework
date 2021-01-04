@@ -110,4 +110,14 @@ class QueryBuilder
             return false;
         }
     }
+
+    public function count($table, $key, $value) {
+        $sql = sprintf(
+            'select %s from %s where %s = %s',
+            'id',
+            $table,
+            $key,
+            "{$value}"
+        );
+    }
 }

@@ -17,12 +17,12 @@ class UsersController
         if($user->authenticate($_POST['password'])) {
             Response::json([
                 'success' => true,
-                'token' => $user->createToken()
+                'token'   => $user->createToken()
             ]);
         } else {
             Response::json([
                 'success' => false,
-                'msg' => App::get('err_msgs')->login
+                'msg'     => App::get('err_msgs')->login
             ]);
         }
     }
@@ -44,8 +44,8 @@ class UsersController
         if($user->save()) {
             Response::json([
                 'success' => true, 
-                'msg' => App::get('succ_msgs')->registered,
-                'user' => [
+                'msg'     => App::get('succ_msgs')->registered,
+                'user'    => [
                     'email' => $user->email, 
                     'name'  => $user->name,
                     'token' => $user->createToken()
@@ -58,7 +58,7 @@ class UsersController
         $user = (new User())->get(Token::getUserId());
         Response::json([
             'success' => true, 
-            'data' => $user->posts()
+            'data'    => $user->posts()
         ]);
     }
 }

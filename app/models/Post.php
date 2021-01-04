@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Core\{App, Hash};
+use App\Core\{App, Hash, Token};
 use App\Core\Model;
-use Exception;
 
 class Post extends Model
 {
@@ -31,9 +30,20 @@ class Post extends Model
     //     return $this->trimErrors($post);
     // }
 
+    public function getPost($hash) {
+        $post = App::get('database')->selectOneModel($this->model, $this->table, ['user_id', 'hash', 'content', 'created_at', 'updated_at'], 'hash', $hash);
+        $post->token = Token::createCommentToken($post->hash);
+        unset($post->errors, $post->id);
+        return $post;
+    }
+
     public function getUserPosts($user_id) {
-        $posts = App::get('database')->selectAllModel($this->model, $this->table, ['*'], 'user_id', $user_id);
-        return $this->trimErrors($posts);
+        $posts = App::get('database')->selectAllModel($this->model, $this->table, ['user_id', 'hash', 'content', 'created_at', 'updated_at'], 'user_id', $user_id);
+        $posts = $this->trim($posts);
+        array_map(function($post) {
+            $post->commentCount = (new Comment())->count('hash', $post->hash);
+        }, $posts);
+        return $posts;
     }
 
 }
