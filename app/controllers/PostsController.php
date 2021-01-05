@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\{Response, Token, App};
-use App\Models\{Post, Comment};
+use App\Models\{Post, Comment, User};
 
 class PostsController
 {
@@ -40,9 +40,7 @@ class PostsController
 
     public function getPost() {
         if(isset($_GET['hash'])) {
-            $post = (new Post())->getPost($_GET['hash']);
-            dd(Token::createCommentToken($post->hash));
-            $post->token = Token::createCommentToken($post->hash);
+            $post = (new Post())->getPostData($_GET['hash']);
             Response::json([
                 "succes" => true,
                 "post"   => $post

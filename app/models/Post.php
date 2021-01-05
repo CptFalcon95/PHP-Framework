@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\{App, Hash, Token};
 use App\Core\Model;
+use App\Models\User;
 
 class Post extends Model
 {
@@ -29,11 +30,25 @@ class Post extends Model
     //     $post = App::get('database')->selectOneModel($this->model, $this->table, ['*'], 'hash', $hash);
     //     return $this->trimErrors($post);
     // }
+    
 
-    public function getPost($hash) {
-        $post = App::get('database')->selectOneModel($this->model, $this->table, ['user_id', 'hash', 'content', 'created_at', 'updated_at'], 'hash', $hash);
-        $post->token = Token::createCommentToken($post->hash);
-        unset($post->errors, $post->id);
+    // Think im better of constructing an object myself instead of loading DB data into model and then unsetting
+    // all the data I dont want to send.
+    public function getPostData($hash) {
+        $db = App::get('database');
+        $post = $db->selectOne($this->table, ['id', 'user_id', 'hash', 'content', 'created_at', 'updated_at'], 'hash', $hash);
+        $user = $db->selectOne('users', ['*'], 'id', $post->user_id);
+        $postData = [
+            'user' => [
+                'name' => $user->name,
+                'image_url' => "Soon...",
+                'profile_url' => "Soon..."
+            ]
+            ];
+        dd($user);
+        $post->csrf = Token::createCommentToken($post->hash);
+        $post->user = (new User())->get($post->user_id);
+
         return $post;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Core;
 use ReallySimpleJWT\Token as JWT;
+use Ayesh\StatelessCSRF\StatelessCSRF;
 
 class Token
 {
@@ -29,14 +30,13 @@ class Token
     }
 
     public static function createCommentToken($post_hash) {
-        // Custom payload for commenting on posts
-        $payload = [
-            'iat' => time(),
-            'exp' => time() + 10,
-            'iss' => $_ENV['JWT_ISSUER'],
-            'post_hash' => $post_hash
-        ];
-        return static::customPayload($payload);
+        $csrf_generator = new StatelessCSRF($_ENV['CSRF_KEY']);
+        $csrf_generator->setGlueData('ip', $_SERVER['REMOTE_ADDR']);
+        $csrf_generator->setGlueData('user-agent', $_SERVER['HTTP_USER_AGENT']);
+        $csrf_generator->setGlueData('post', $post_hash);
+        $csrf_generator->setGlueData('user', static::getUserId());
+        // Expires in an hour.
+        return $csrf_generator->getToken('unique-id-for-key', time() + 3600);
     }
 
     public static function create($userId) {
