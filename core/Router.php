@@ -27,6 +27,11 @@ class Router
         $argsNum = func_num_args();
         $args = func_get_args();
         $uri = $args[0];
+
+        $search = "#\{.*?\}#s";
+        $replace = "*";
+        $uri = preg_replace($search,$replace,$uri);
+
         if($argsNum != 3 && $argsNum != 2) {
             throw new Exception("Parameters invalid for GET route");
         } elseif ($argsNum === 3) {
@@ -43,6 +48,11 @@ class Router
         $argsNum = func_num_args();
         $args = func_get_args();
         $uri = $args[0];
+
+        $search = "#\{.*?\}#s";
+        $replace = "*";
+        $uri = preg_replace($search,$replace,$uri);
+
         if($argsNum != 3 && $argsNum != 2) {
             throw new Exception("Parameters invalid for POST route");
         } elseif ($argsNum === 3) {
@@ -56,10 +66,11 @@ class Router
     }
 
     public function direct($uri, $requestType) {
-        
-        if(array_key_exists($uri, $this->routes[$requestType]))
-        {
-            if(array_key_exists($uri, $this->middleware[$requestType])) {
+        $checkURI = array_key_exists($uri, $this->routes[$requestType]);
+        $checkMiddleware = array_key_exists($uri, $this->middleware[$requestType]);
+
+        if($checkURI) {
+            if($checkMiddleware) {
                 foreach($this->middleware[$requestType][$uri] as $middleware) {
                     $this->callMiddleware(...explode('@', $middleware));
                 }
@@ -67,9 +78,27 @@ class Router
             return $this->callAction(
                 ...explode('@', $this->routes[$requestType][$uri])
             );
+        } elseif (!$checkURI) {
+            foreach($this->routes[$requestType] as $route => $controller) {
+                // Check if URI fits an wildcard route
+                if(fnmatch($route, $uri)) {
+                    // Run middleware first
+                    if($checkMiddleware) {
+                        foreach($this->middleware[$requestType][$route] as $middleware) {
+                            $this->callMiddleware(...explode('@', $middleware));
+                        }
+                    }
+                    // Fire controller and call action
+                    return $this->callAction(
+                        ...explode('@', $controller)
+                    );
+                } else {
+                    throw new Exception('No route defined for this URI.');
+                }
+            }
+        } else {
+            throw new Exception('No route defined for this URI.');
         }
-
-        throw new Exception('No route defined for this URI.');
     }
 
     protected function callMiddleware($middleware, $action) {

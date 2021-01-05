@@ -49,4 +49,10 @@ class PostsController
             ]);
         }
     }
+
+    public function wildcardTest() {
+        Response::json([
+            "success" => true
+        ]);
+    }
 }
