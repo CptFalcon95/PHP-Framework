@@ -97,8 +97,6 @@ class Router
     }
 
     private function getWildcardData($route, $uri) {
-        // Get route root by replacing wildcards with astrix' and exploding on '/*'
-        // to separate root from the wildcards
         $rootOfRoute     = $this->getRouteRoot($route);
         $wildcardKeys    = $this->getWildcardKeys($route);
         $wildcardValues  = $this->getWildcardValues($rootOfRoute, $uri);
@@ -109,6 +107,8 @@ class Router
     }
 
     private function getRouteRoot($route) {
+        // Get route root by replacing wildcards with astrix' and exploding on '/*'
+        // to separate root from the wildcards
         return explode("/*", preg_replace('#\{.*?\}#s','*',$route))[0];
     }
 
