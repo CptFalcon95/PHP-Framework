@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Core\{Response, Token, App};
-use App\Models\{Post, Comment, User};
+use App\Core\{Response, Token, App, Request};
+use App\Models\{Post, Comment};
 
 class PostsController
 {
@@ -46,5 +46,12 @@ class PostsController
                 "post"   => $post
             ]);
         }
+    }
+
+    public function wildcardTest() {
+        Response::json([
+            "success" => true,
+            "data"    => Request::get('body')
+        ]);
     }
 }
