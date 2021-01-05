@@ -1,7 +1,7 @@
 <?php
-$router->get('profile/{id}', ['Auth@checkToken'], 'PostsController@wildcardTest');
 
 $router->get('', 'PagesController@login');
+
 $router->get('register', 'PagesController@register');
 $router->get('about', 'PagesController@about');
 $router->get('contact', 'PagesController@contact');
@@ -15,4 +15,8 @@ $router->post('posts/store', ['Auth@checkToken'], 'PostsController@store');
 $router->post('comments/store', 'CommentsController@store');
 $router->get('posts/index', ['Auth@checkToken'], 'PostsController@index');
 $router->get('p', ['Auth@checkToken'], 'PostsController@getPost');
+
+$router->get('profile/test/{test}/{id}', ['Auth@checkToken'], 'PostsController@wildcardTest');
+
+
 

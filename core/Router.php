@@ -28,10 +28,6 @@ class Router
         $args = func_get_args();
         $uri = $args[0];
 
-        $search = "#\{.*?\}#s";
-        $replace = "*";
-        $uri = preg_replace($search,$replace,$uri);
-
         if($argsNum != 3 && $argsNum != 2) {
             throw new Exception("Parameters invalid for GET route");
         } elseif ($argsNum === 3) {
@@ -49,10 +45,6 @@ class Router
         $args = func_get_args();
         $uri = $args[0];
 
-        $search = "#\{.*?\}#s";
-        $replace = "*";
-        $uri = preg_replace($search,$replace,$uri);
-
         if($argsNum != 3 && $argsNum != 2) {
             throw new Exception("Parameters invalid for POST route");
         } elseif ($argsNum === 3) {
@@ -66,11 +58,9 @@ class Router
     }
 
     public function direct($uri, $requestType) {
-        $checkURI = array_key_exists($uri, $this->routes[$requestType]);
-        $checkMiddleware = array_key_exists($uri, $this->middleware[$requestType]);
-
-        if($checkURI) {
-            if($checkMiddleware) {
+        // Look for uri in the defined routes, these routes do not contain wildcards
+        if(array_key_exists($uri, $this->routes[$requestType])) {
+            if(array_key_exists($uri, $this->middleware[$requestType])) {
                 foreach($this->middleware[$requestType][$uri] as $middleware) {
                     $this->callMiddleware(...explode('@', $middleware));
                 }
@@ -78,27 +68,59 @@ class Router
             return $this->callAction(
                 ...explode('@', $this->routes[$requestType][$uri])
             );
-        } elseif (!$checkURI) {
+        }
+        // If URI does not exist it could contain wildcards.
+        if (!array_key_exists($uri, $this->routes[$requestType])) {
             foreach($this->routes[$requestType] as $route => $controller) {
-                // Check if URI fits an wildcard route
-                if(fnmatch($route, $uri)) {
+                // Replace all {param} in route with astrix' 
+                // e.g. route/{param} => route/*
+                $preparedRoute = preg_replace('#\{.*?\}#s','*',$route);
+                // Check if URI fits a route with wildcards
+                if(fnmatch($preparedRoute, $uri)) {
                     // Run middleware first
-                    if($checkMiddleware) {
+                    if(array_key_exists($route, $this->middleware[$requestType])) {
                         foreach($this->middleware[$requestType][$route] as $middleware) {
                             $this->callMiddleware(...explode('@', $middleware));
                         }
                     }
+                    Request::bind('body', $this->getWildcardData($preparedRoute, $route, $uri));
                     // Fire controller and call action
                     return $this->callAction(
                         ...explode('@', $controller)
                     );
-                } else {
-                    throw new Exception('No route defined for this URI.');
                 }
             }
-        } else {
-            throw new Exception('No route defined for this URI.');
         }
+        // If the method did not return by now, the uri is invalid
+        throw new Exception('No route defined for this URI.');
+    }
+
+    private function getWildcardData($preparedRoute, $route, $uri) {
+        $rootOfRoute     = explode("/*", $preparedRoute)[0];
+        $wildcardKeys    = $this->getWildcardKeys($route);
+        $wildcardValues  = $this->getWildcardValues($rootOfRoute, $uri);
+        return $this->combineWildcardData($wildcardKeys, $wildcardValues);
+    }
+
+    private function combineWildcardData($keys, $values) {
+        if(count($keys) !== count($values)) {
+            throw new Exception('Wildcard keys and values don\'t add up');
+        }
+        return array_combine($keys, $values);
+    }
+
+    private function getWildcardValues($rootOfRoute, $uri) {
+        return array_filter(
+            explode('/', str_replace($rootOfRoute, '', $uri))
+        );
+    }
+
+    private function getWildcardKeys($route) {
+        return array_filter(array_map(function($routePart) {
+            if($routePart[0] === '{') {
+                return trim($routePart, '{}');
+            } unset($routePart);
+        },explode('/', $route)));
     }
 
     protected function callMiddleware($middleware, $action) {
