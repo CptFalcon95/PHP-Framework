@@ -73,7 +73,7 @@ class Router
         if (!array_key_exists($uri, $this->routes[$requestType])) {
             foreach($this->routes[$requestType] as $route => $controller) {
                 // Replace all {param} in route with astrix' 
-                // e.g. route/{param} => route/*
+                // e.g. route/{param}/{param2} => route/*/*
                 $preparedRoute = preg_replace('#\{.*?\}#s','*',$route);
                 // Check if URI fits a route with wildcards
                 if(fnmatch($preparedRoute, $uri)) {
@@ -83,7 +83,8 @@ class Router
                             $this->callMiddleware(...explode('@', $middleware));
                         }
                     }
-                    Request::bind('body', $this->getWildcardData($preparedRoute, $route, $uri));
+                    // Inject wildcard data into Request 
+                    Request::bind('body', $this->getWildcardData($route, $uri));
                     // Fire controller and call action
                     return $this->callAction(
                         ...explode('@', $controller)
@@ -95,11 +96,20 @@ class Router
         throw new Exception('No route defined for this URI.');
     }
 
-    private function getWildcardData($preparedRoute, $route, $uri) {
-        $rootOfRoute     = explode("/*", $preparedRoute)[0];
+    private function getWildcardData($route, $uri) {
+        // Get route root by replacing wildcards with astrix' and exploding on '/*'
+        // to separate root from the wildcards
+        $rootOfRoute     = $this->getRouteRoot($route);
         $wildcardKeys    = $this->getWildcardKeys($route);
         $wildcardValues  = $this->getWildcardValues($rootOfRoute, $uri);
-        return $this->combineWildcardData($wildcardKeys, $wildcardValues);
+        return $this->combineWildcardData(
+            $wildcardKeys, 
+            $wildcardValues
+        );
+    }
+
+    private function getRouteRoot($route) {
+        return explode("/*", preg_replace('#\{.*?\}#s','*',$route))[0];
     }
 
     private function combineWildcardData($keys, $values) {
