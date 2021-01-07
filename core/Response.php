@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-class Response
+class Response extends App
 {
     public static function json($data)
     {

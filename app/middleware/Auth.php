@@ -13,7 +13,7 @@ class Auth
                 'errors' => 'No token.'
             ]);
         }
-        if(!Token::verify()) {
+        if(!Token::verifyJWT()) {
             Response::json([
                 'success' => false,
                 'errors' => 'Token denied.'

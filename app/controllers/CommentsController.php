@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\{Response, Token, App};
-use App\Models\{Comment};
+use App\Models\{Comment, Post};
 
 class CommentsController
 {
@@ -11,7 +11,7 @@ class CommentsController
     public function store() {
         if(isset($_POST['content'], $_POST['post_hash'], $_POST['post_token'])) {
             // TODO Token is probably invalid need to check the custom token
-            if(!Token::verifyCsrfToken($_POST['post_token'], $_POST['post_hash'])) {
+            if(!Post::verifyCsrfToken($_POST['post_token'], $_POST['post_hash'])) {
                 Response::json([
                     "succes" => false,
                     "msg" => App::get('err_msgs')->comment->failed
@@ -19,7 +19,7 @@ class CommentsController
             }
             $comment = new Comment;
             $comment->post_hash = $_POST['post_hash'];
-            $comment->user_id   = Token::getUserId();
+            $comment->user_id   = Token::getUserIdJWT();
             $comment->content   = $_POST['content'];
             if($comment->save()) {
                 Response::json([

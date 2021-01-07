@@ -42,10 +42,23 @@ class Post extends Model
             'updated_at'    => $post->updated_at,
             'comment_count' => $this->getCommentCount($hash),
             'likes'         => $this->getLikesCount($hash),
-            'csrf'          => Token::createCommentToken($hash)
+            'csrf'          => $this->createCsrfToken($hash)
         ];
 
         return $postData;
+    }
+
+    public static function createCsrfToken($post_hash) {
+        $csrf_generator = Token::createCSRF('post_hash', $post_hash);
+        // Expires in an hour.
+        return $csrf_generator->getToken('post_hash', time() + 3600);
+    }
+
+    public static function verifyCsrfToken($token, $post_hash) {
+        if(Token::verifyCsrfToken($token, 'post_hash', $post_hash)) {
+            return true;
+        }
+        return false;
     }
 
     private function getCommentCount($hash) {
@@ -56,16 +69,16 @@ class Post extends Model
 
     }
 
-
     // This data will show on the user's profile timeline, 
     // only posts of the specified user will be shown here
     public function getUserPosts($user_id) {
-        $posts = App::get('database')->selectAllModel($this->model, $this->table, ['user_id', 'hash', 'content', 'created_at', 'updated_at'], 'user_id', $user_id);
-        $posts = $this->trim($posts);
-        array_map(function($post) {
+        $posts = App::get('database')->selectAllModel($this->model, $this->table, ['hash','content', 'created_at', 'updated_at'], 'user_id', $user_id);
+        $posts = array_map(function($post) {
             $post->commentCount = (new Comment())->count('hash', $post->hash);
+            unset($post->hash);
+            return $post;
         }, $posts);
-        return $posts;
+        return $this->trim($posts);
     }
 
 }

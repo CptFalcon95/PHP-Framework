@@ -8,7 +8,7 @@ use App\Models\{Post};
 class PostsController
 {
     public function index() {
-        $posts = (new Post())->getUserPosts(Token::getUserId());
+        $posts = (new Post())->getUserPosts(Token::getUserIdJWT());
         if (!count($posts)) {
             Response::json([
                 "success" => false,
@@ -25,7 +25,7 @@ class PostsController
         if(isset($_POST['content'])) {
             $post = new Post;
             $post->content = $_POST['content'];
-            $post->user_id = Token::getUserId();
+            $post->user_id = Token::getUserIdJWT();
             if($post->save()) {
                 Response::json([
                     "succes" => true

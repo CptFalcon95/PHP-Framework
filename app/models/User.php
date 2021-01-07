@@ -35,7 +35,7 @@ class User extends Model
 
     public function createToken() {
         $user = $this->getByMail($this->email);
-        return Token::create($user->id);
+        return Token::createJWT($user->id);
     }
 
     public function validate() {
