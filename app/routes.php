@@ -18,5 +18,10 @@ $router->get('p', ['Auth@checkToken'], 'PostsController@getPost');
 
 $router->get('profile/test/{test}/{id}', ['Auth@checkToken'], 'PostsController@wildcardTest');
 
+$router->get('post/{id}', ['Auth@checkToken'], 'PostsController@otherFunction');
+$router->get('post', ['Auth@checkToken'], 'PostsController@anotherFunction');
+
+
+
 
 

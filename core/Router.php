@@ -84,7 +84,7 @@ class Router
                         }
                     }
                     // Inject wildcard data into Request 
-                    Request::bind('body', $this->getWildcardData($route, $uri));
+                    Request::bind('wildcard_data', $this->getWildcardData($route, $uri));
                     // Fire controller and call action
                     return $this->callAction(
                         ...explode('@', $controller)
@@ -97,9 +97,8 @@ class Router
     }
 
     private function getWildcardData($route, $uri) {
-        $rootOfRoute     = $this->getRouteRoot($route);
         $wildcardKeys    = $this->getWildcardKeys($route);
-        $wildcardValues  = $this->getWildcardValues($rootOfRoute, $uri);
+        $wildcardValues  = $this->getWildcardValues($route, $uri);
         return $this->combineWildcardData(
             $wildcardKeys, 
             $wildcardValues
@@ -116,12 +115,12 @@ class Router
         if(count($keys) !== count($values)) {
             throw new Exception('Wildcard keys and values don\'t add up');
         }
-        return array_combine($keys, $values);
+        return (object)array_combine($keys, $values);
     }
 
-    private function getWildcardValues($rootOfRoute, $uri) {
+    private function getWildcardValues($route, $uri) {
         return array_filter(
-            explode('/', str_replace($rootOfRoute, '', $uri))
+            explode('/', str_replace($this->getRouteRoot($route), '', $uri))
         );
     }
 

@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\{Response, Token, App, Request};
-use App\Models\{Post, Comment};
+use App\Models\{Post};
 
 class PostsController
 {
@@ -51,7 +51,22 @@ class PostsController
     public function wildcardTest() {
         Response::json([
             "success" => true,
-            "data"    => Request::get('body')
+            "data"    => Request::get('wildcard_data')
+        ]);
+    }
+
+    public function otherFunction() {
+        dd(Request::get('wildcard_data')->id);
+        Response::json([
+            "success" => true,
+            "data"    => Request::get('wildcard_data'),
+            "hash"    => $_GET['hash']
+        ]);
+    }
+
+    public function anotherFunction() {
+        Response::json([
+            "success" => true,
         ]);
     }
 }
