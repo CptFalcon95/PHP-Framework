@@ -14,7 +14,7 @@
             "no_posts" : "Nothing posted yet. Create your first post!"
         },
         "comment" : {
-            "failed" : "Comment could not be posted, please try again."
+            "failed" : "Comment could not be posted, please refresh and try again."
         }
     },
     "success" : {

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Core\{App, Hash, Token};
 use App\Core\Model;
-use App\Models\User;
+use App\Models\Comment;
 
 class Post extends Model
 {
@@ -25,33 +25,40 @@ class Post extends Model
         }
         return true;
     }
-
-    // public function getByHash($hash) {
-    //     $post = App::get('database')->selectOneModel($this->model, $this->table, ['*'], 'hash', $hash);
-    //     return $this->trimErrors($post);
-    // }
     
-
-    // Think im better of constructing an object myself instead of loading DB data into model and then unsetting
-    // all the data I dont want to send.
+    // This data will sho
     public function getPostData($hash) {
         $db = App::get('database');
-        $post = $db->selectOne($this->table, ['id', 'user_id', 'hash', 'content', 'created_at', 'updated_at'], 'hash', $hash);
-        $user = $db->selectOne('users', ['*'], 'id', $post->user_id);
+        $post = $db->selectOne($this->table, ['id', 'user_id', 'content', 'updated_at'], 'hash', $hash);
+        $user = $db->selectOne('users', ['name'], 'id', $post->user_id);
         $postData = [
             'user' => [
-                'name' => $user->name,
-                'image_url' => "Soon...",
+                'name'        => $user->name,
+                'image_url'   => "Soon...",
                 'profile_url' => "Soon..."
-            ]
-            ];
-        dd($user);
-        $post->csrf = Token::createCommentToken($post->hash);
-        $post->user = (new User())->get($post->user_id);
+            ],
+            'content'       => $post->content,
+            'hash'          => $hash,
+            'updated_at'    => $post->updated_at,
+            'comment_count' => $this->getCommentCount($hash),
+            'likes'         => $this->getLikesCount($hash),
+            'csrf'          => Token::createCommentToken($hash)
+        ];
 
-        return $post;
+        return $postData;
     }
 
+    private function getCommentCount($hash) {
+
+    }
+
+    private function getLikesCount($hash) {
+
+    }
+
+
+    // This data will show on the user's profile timeline, 
+    // only posts of the specified user will be shown here
     public function getUserPosts($user_id) {
         $posts = App::get('database')->selectAllModel($this->model, $this->table, ['user_id', 'hash', 'content', 'created_at', 'updated_at'], 'user_id', $user_id);
         $posts = $this->trim($posts);

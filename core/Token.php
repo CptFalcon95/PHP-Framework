@@ -17,28 +17,6 @@ class Token
             return false;
         }
     }
-
-    public static function verify() {
-        $token = (func_num_args()) ? func_get_arg(0) : static::get();
-        if($token != false) {
-            if(JWT::validate($token, $_ENV['JWT_SECRET'])) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    public static function createCommentToken($post_hash) {
-        $csrf_generator = new StatelessCSRF($_ENV['CSRF_KEY']);
-        $csrf_generator->setGlueData('ip', $_SERVER['REMOTE_ADDR']);
-        $csrf_generator->setGlueData('user-agent', $_SERVER['HTTP_USER_AGENT']);
-        $csrf_generator->setGlueData('post', $post_hash);
-        $csrf_generator->setGlueData('user', static::getUserId());
-        // Expires in an hour.
-        return $csrf_generator->getToken('unique-id-for-key', time() + 3600);
-    }
-
     public static function create($userId) {
         $secret = $_ENV['JWT_SECRET'];
         $expiration = time() + 60 * 60 * 24 * 60;
@@ -58,7 +36,36 @@ class Token
         return false;
     }
 
-    private static function customPayload($payload) {
-        return JWT::customPayload($payload, $_ENV['JWT_SECRET']);
+    public static function verify() {
+        $token = (func_num_args()) ? func_get_arg(0) : static::get();
+        if($token != false) {
+            if(JWT::validate($token, $_ENV['JWT_SECRET'])) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function createCommentToken($post_hash) {
+        $csrf_generator = new StatelessCSRF($_ENV['CSRF_KEY']);
+        $csrf_generator->setGlueData('ip', $_SERVER['REMOTE_ADDR']);
+        $csrf_generator->setGlueData('user-agent', $_SERVER['HTTP_USER_AGENT']);
+        $csrf_generator->setGlueData('post', $post_hash);
+        $csrf_generator->setGlueData('user', static::getUserId());
+        // Expires in an hour.
+        return $csrf_generator->getToken('comment_id', time() + 3600);
+    }
+
+    public static function verifyCsrfToken($token, $post_hash) {
+        $csrf_generator = new StatelessCSRF($_ENV['CSRF_KEY']);
+        $csrf_generator->setGlueData('ip', $_SERVER['REMOTE_ADDR']);
+        $csrf_generator->setGlueData('user-agent', $_SERVER['HTTP_USER_AGENT']);
+        $csrf_generator->setGlueData('post', $post_hash);
+        $csrf_generator->setGlueData('user', static::getUserId());
+        if($csrf_generator->validate('comment_id', $token)) {
+            return true;
+        }
+        return false;
     }
 }

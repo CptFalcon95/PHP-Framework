@@ -39,13 +39,12 @@ class PostsController
     }
 
     public function getPost() {
-        if(isset($_GET['hash'])) {
-            $post = (new Post())->getPostData($_GET['hash']);
-            Response::json([
-                "succes" => true,
-                "post"   => $post
-            ]);
-        }
+        $hash = Request::get('wildcard_data')->hash;
+        $post = (new Post())->getPostData($hash);
+        Response::json([
+            "succes" => true,
+            "post"   => $post
+        ]);
     }
 
     public function wildcardTest() {
@@ -56,11 +55,9 @@ class PostsController
     }
 
     public function otherFunction() {
-        dd(Request::get('wildcard_data')->id);
         Response::json([
-            "success" => true,
+            "success" => false,
             "data"    => Request::get('wildcard_data'),
-            "hash"    => $_GET['hash']
         ]);
     }
 
