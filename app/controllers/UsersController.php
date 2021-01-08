@@ -55,7 +55,7 @@ class UsersController
     }
     
     public function getPosts() {
-        $user = (new User())->get(Token::getUserId());
+        $user = (new User())->get(Token::getUserIdJWT());
         Response::json([
             'success' => true, 
             'data'    => $user->posts()
