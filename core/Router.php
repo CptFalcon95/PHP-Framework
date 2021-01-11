@@ -29,7 +29,7 @@ class Router
         $uri = $args[0];
 
         if($argsNum != 3 && $argsNum != 2) {
-            throw new Exception("Parameters invalid for GET route");
+            throw new Exception("Parameters invalid for GET route, 2 or 3 expected");
         } elseif ($argsNum === 3) {
             $controller = $args[2];
             $this->routes['GET'][$uri] = $controller;
@@ -46,7 +46,7 @@ class Router
         $uri = $args[0];
 
         if($argsNum != 3 && $argsNum != 2) {
-            throw new Exception("Parameters invalid for POST route");
+            throw new Exception("Parameters invalid for POST route, 2 or 3 expected");
         } elseif ($argsNum === 3) {
             $controller = $args[2];
             $this->routes['POST'][$uri] = $controller;

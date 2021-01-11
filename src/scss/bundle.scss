@@ -1,9 +1,11 @@
-@import 'vendor/bootstrap.scss';
+@import '../../node_modules/bootstrap-scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400&display=swap');
 
 $small-display : "575px";
 @import 'navbar';
 @import 'register-login-form';
+@import 'components/profile-cover';
+@import 'profile';
 
 @media(max-width: $small-display) {
     .sm-h-100, .sm-h-100 > .row {
