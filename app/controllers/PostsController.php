@@ -12,7 +12,7 @@ class PostsController
         if (!count($posts)) {
             Response::json([
                 "success" => false,
-                "msgs"    => App::get('err_msgs')->post->no_posts
+                "msg"    => App::get('err_msgs')->post->no_posts
             ]);
         }
         Response::json([
@@ -28,13 +28,13 @@ class PostsController
             $post->user_id = Token::getUserIdJWT();
             if($post->save()) {
                 Response::json([
-                    "succes" => true
+                    "success" => true
                 ]);
             }
         }
         Response::json([
-            "succes" => false,
-            "msg" => App::get('err_msgs')->post->failed
+            "success" => false,
+            "msg"     => App::get('err_msgs')->post->failed
         ]);
     }
 
@@ -42,8 +42,8 @@ class PostsController
         $hash = Request::get('wildcard_data')->hash;
         $post = (new Post())->getPostData($hash);
         Response::json([
-            "succes" => true,
-            "post"   => $post
+            "success" => true,
+            "post"    => $post
         ]);
     }
 

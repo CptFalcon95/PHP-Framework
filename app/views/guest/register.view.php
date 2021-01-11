@@ -1,6 +1,7 @@
-<?php require 'partials/head.php'; ?>
-
-<?php require 'partials/navigation.php'; ?>
+<?php 
+requireTemplate('partials/head');
+requireTemplate('guest/guest_navigation');
+?>
 
 <div id="bg-home" class="clearfix"></div>
 
@@ -70,4 +71,4 @@
     </div>
 </section>
 
-<?php include('partials/footer.php'); ?>
+<?php requireTemplate('footer');?>

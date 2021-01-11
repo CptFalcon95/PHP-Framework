@@ -17,7 +17,8 @@ App::get('database')->pdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPT
 function view($name, $data = [])
 {
     extract($data);
-    return require "../app/views/{$name}.view.php";
+    App::bind('template_data', $data);
+    require __DIR__."/../app/views/{$name}.view.php";
 }
 
 function redirect($path)
@@ -32,6 +33,11 @@ function parseJSONFile($filename)
         throw new Exception("File not found in App directory. Path is relative to app directory");
     }
     return json_decode(file_get_contents($filename));
+}
+
+function requireTemplate($filePath) {
+    extract(App::get('template_data'));
+    return require __DIR__."/../app/views/{$filePath}.php";
 }
 
 function dd()

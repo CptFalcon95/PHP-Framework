@@ -1,12 +1,13 @@
 <?php 
 
 namespace App\Controllers;
+use App\Core\App;
 
 class PagesController 
 {
     public function login()
     {
-        return view('login', [
+        return view('guest/login', [
             "pageTitle" => "Login",
             "page" => "login"
         ]);
@@ -14,14 +15,16 @@ class PagesController
 
     public function register()
     {
-        return view('register', [
+        return view('guest/register', [
             "pageTitle" => "Register",
             "page" => "register"
         ]);
     }
 
-    public function contact()
+    public function profile()
     {
-        return view('contact');
+        return view('profile', [
+            "pageTitle" => "Profile",
+        ]);
     }
 }

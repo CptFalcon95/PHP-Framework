@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 use Dotenv\Dotenv;
-use App\Core\{App, Router, Request};
+use App\Core\{App, Router, Request, View};
 
 require '../vendor/autoload.php';
 
