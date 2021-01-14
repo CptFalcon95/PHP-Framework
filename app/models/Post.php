@@ -31,21 +31,24 @@ class Post extends Model
         $db = App::get('database');
         $post = $db->selectOne($this->table, ['id', 'user_id', 'content', 'updated_at'], 'hash', $hash);
         $user = $db->selectOne('users', ['name'], 'id', $post->user_id);
-        $postData = [
-            'user' => [
-                'name'        => $user->name,
-                'image_url'   => "Soon...",
-                'profile_url' => "Soon..."
-            ],
-            'content'       => $post->content,
-            'hash'          => $hash,
-            'updated_at'    => $post->updated_at,
-            'comment_count' => $this->getCommentCount($hash),
-            'likes'         => $this->getLikesCount($hash),
-            'csrf'          => $this->createCsrfToken($hash)
-        ];
-
-        return $postData;
+        if($user) {
+            $postData = [
+                'user' => [
+                    'name'        => $user->name,
+                    'image_url'   => "Soon...",
+                    'profile_url' => "Soon..."
+                ],
+                'content'       => $post->content,
+                'hash'          => $hash,
+                'updated_at'    => $post->updated_at,
+                'comment_count' => $this->getCommentCount($hash),
+                'likes'         => $this->getLikesCount($hash),
+                'csrf'          => $this->createCsrfToken($hash)
+            ];
+    
+            return $postData;
+        }
+        return false;
     }
 
     public static function createCsrfToken($post_hash) {

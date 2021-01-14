@@ -71,4 +71,4 @@ requireTemplate('guest/guest_navigation');
     </div>
 </section>
 
-<?php requireTemplate('footer');?>
+<?php requireTemplate('partials/footer');?>
