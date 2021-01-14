@@ -23,7 +23,7 @@ class PagesController
 
     public function profile()
     {
-        return view('profile', [
+        return view('user_profile', [
             "pageTitle" => "Profile",
         ]);
     }
