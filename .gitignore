@@ -4,3 +4,5 @@ config.php
 .env
 todo.txt
 node_modules/
+phinx.php
+phinx

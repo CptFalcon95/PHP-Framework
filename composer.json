@@ -7,7 +7,8 @@
     "require": {
         "rbdwllr/reallysimplejwt": "^3.1",
         "vlucas/phpdotenv": "^5.2",
-        "ayesh/stateless-csrf": "^1.2"
+        "ayesh/stateless-csrf": "^1.2",
+        "robmorgan/phinx": "^0.12.4"
     },
     "scripts": {
         "al": "composer dumpautoload",
